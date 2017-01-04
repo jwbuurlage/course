@@ -75,11 +75,11 @@ however, your first post might be moderated. This is simply to prevent spam.
 
 1. Some questions take a particular form. These are called *WTF questions*. WTF
    questions are those of this form or similar:
-  * What does ____ mean?
-  * What does the ____ function mean?
-  * What is a ____ ?
-  * Where did ____ come from ?
-  * What is the structure of ____ ?
+  * What does .... mean?
+  * What does the .... function mean?
+  * What is a .... ?
+  * Where did .... come from ?
+  * What is the structure of .... ?
 
   They are all answerable with the `:info` command. For example, suppose you
   have the question, "What does the `swiggletwoop` function mean?" You may
@@ -177,28 +177,30 @@ inspect the introduction modules.
 
 They contain examples of data structures and Haskell syntax. They do not contain
 exercises and exist to provide a cursory examination of Haskell syntax. The next
-step is to complete the exercises in `Course.List`.
+step is to complete the exercises in:
+
+- [x] `Course.List`.
 
 After this, the following progression of modules is recommended:
 
-* `Course.Functor`
-* `Course.Applicative`
-* `Course.Monad` (please see [this issue](https://github.com/NICTA/course/issues/118))
-* `Course.FileIO`
-* `Course.State`
-* `Course.StateT`
-* `Course.Extend`
-* `Course.Comonad`
-* `Course.Compose`
-* `Course.Traversable`
-* `Course.ListZipper`
-* `Course.Parser` *(see also `Course.Person` for the parsing rules)*
-* `Course.MoreParser`
-* `Course.JsonParser`
-* `Course.Interactive`
-* `Course.Anagrams`
-* `Course.FastAnagrams`
-* `Course.Cheque`
+- [ ] `Course.Functor`
+- [ ] `Course.Applicative`
+- [ ] `Course.Monad` (please see [this issue](https://github.com/NICTA/course/issues/118))
+- [ ] `Course.FileIO`
+- [ ] `Course.State`
+- [ ] `Course.StateT`
+- [ ] `Course.Extend`
+- [ ] `Course.Comonad`
+- [ ] `Course.Compose`
+- [ ] `Course.Traversable`
+- [ ] `Course.ListZipper`
+- [ ] `Course.Parser` *(see also `Course.Person` for the parsing rules)*
+- [ ] `Course.MoreParser`
+- [ ] `Course.JsonParser`
+- [ ] `Course.Interactive`
+- [ ] `Course.Anagrams`
+- [ ] `Course.FastAnagrams`
+- [ ] `Course.Cheque`
 
 During this progression, it is often the case that some exercises are abandoned
 due to time constraints and the benefit of completing some exercises over
