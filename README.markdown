@@ -184,7 +184,7 @@ step is to complete the exercises in:
 After this, the following progression of modules is recommended:
 
 - [x] `Course.Functor`
-- [ ] `Course.Applicative`
+- [x] `Course.Applicative`
 - [ ] `Course.Monad` (please see [this issue](https://github.com/NICTA/course/issues/118))
 - [ ] `Course.FileIO`
 - [ ] `Course.State`
