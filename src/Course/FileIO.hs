@@ -73,8 +73,7 @@ the contents of c
 -- /Tip:/ use @getArgs@ and @run@
 main ::
   IO ()
-main =
-  error "todo: Course.FileIO#main"
+main = headOr "" <$> getArgs >>= run
 
 type FilePath =
   Chars
@@ -83,31 +82,33 @@ type FilePath =
 run ::
   Chars
   -> IO ()
-run =
-  error "todo: Course.FileIO#run"
+run file = void $ printFiles =<< getFiles =<< readPaths file
+  where putstrs :: List Chars -> IO ()
+        putstrs lns = void . sequence $ map putStrLn lns
+
+readPaths ::
+  FilePath -> IO (List FilePath)
+readPaths file = lines <$> readFile file
+-- IO Chars
 
 getFiles ::
   List FilePath
   -> IO (List (FilePath, Chars))
-getFiles =
-  error "todo: Course.FileIO#getFiles"
+getFiles files = sequence $ map getFile files
 
 getFile ::
   FilePath
   -> IO (FilePath, Chars)
-getFile =
-  error "todo: Course.FileIO#getFile"
+getFile f = (,) f <$> readFile f
 
 printFiles ::
   List (FilePath, Chars)
   -> IO ()
-printFiles =
-  error "todo: Course.FileIO#printFiles"
+printFiles files = void $ sequence $ map (uncurry printFile) files
 
 printFile ::
   FilePath
   -> Chars
   -> IO ()
-printFile =
-  error "todo: Course.FileIO#printFile"
+printFile path content = putStrLn ("============ " ++ path ++ "\n" ++ content)
 
