@@ -68,8 +68,17 @@ infixr 1 =<<
   f (a -> b)
   -> f a
   -> f b
-(<*>) =
-  error "todo: Course.Monad#(<*>)"
+g <*> x = (\f' -> pure . f' =<< x) =<< g
+
+-- reasoning:
+-- x :: f a
+-- g :: f (a -> b)
+-- f' :: (a -> b)
+-- pure . f' :: a -> f b
+--
+-- pure . f' =<< x :: f a -> f b
+-- => (for outer =<<): lhs (a -> b) -> (f a -> f b), rhs f (a -> b)
+-- => result is (f a -> f b)
 
 infixl 4 <*>
 
@@ -82,8 +91,7 @@ instance Monad Id where
     (a -> Id b)
     -> Id a
     -> Id b
-  (=<<) =
-    error "todo: Course.Monad (=<<)#instance Id"
+  f =<< (Id x) = f x
 
 -- | Binds a function on a List.
 --
@@ -94,8 +102,7 @@ instance Monad List where
     (a -> List b)
     -> List a
     -> List b
-  (=<<) =
-    error "todo: Course.Monad (=<<)#instance List"
+  f =<< xs = foldLeft (++) Nil (f <$> xs)
 
 -- | Binds a function on an Optional.
 --
@@ -106,8 +113,8 @@ instance Monad Optional where
     (a -> Optional b)
     -> Optional a
     -> Optional b
-  (=<<) =
-    error "todo: Course.Monad (=<<)#instance Optional"
+  f =<< (Full x) = f x
+  _ =<< Empty = Empty
 
 -- | Binds a function on the reader ((->) t).
 --
@@ -118,8 +125,12 @@ instance Monad ((->) t) where
     (a -> ((->) t b))
     -> ((->) t a)
     -> ((->) t b)
-  (=<<) =
-    error "todo: Course.Monad (=<<)#instance ((->) t)"
+  (hf =<< f) e = (hf . f) e e
+
+-- e :: t -- environment
+-- (a -> (t -> b))
+-- (t -> a)
+-- (t -> b)
 
 -- | Flattens a combined structure to a single structure.
 --
@@ -138,8 +149,10 @@ join ::
   Monad f =>
   f (f a)
   -> f a
-join =
-  error "todo: Course.Monad#join"
+join = (=<<) id
+
+-- (a -> f b) -> f a -> f b
+-- (a -> a) -> f (a -> a)
 
 -- | Implement a flipped version of @(=<<)@, however, use only
 -- @join@ and @(<$>)@.
@@ -152,8 +165,7 @@ join =
   f a
   -> (a -> f b)
   -> f b
-(>>=) =
-  error "todo: Course.Monad#(>>=)"
+x >>= f = join $ f <$> x
 
 infixl 1 >>=
 
@@ -168,8 +180,7 @@ infixl 1 >>=
   -> (a -> f b)
   -> a
   -> f c
-(<=<) =
-  error "todo: Course.Monad#(<=<)"
+(<=<) f g x = f =<< g x
 
 infixr 1 <=<
 
