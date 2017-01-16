@@ -58,12 +58,11 @@ instance Monad f =>
   pure x = StateT (\s -> pure (x, s))
   (<*>) :: StateT s f (a -> b) -> StateT s f a -> StateT s f b
   (StateT runf) <*> (StateT runx) = StateT (\s -> alpha runx (runf s))
-    where alpha :: (s -> f (a, s)) -> f (a -> b, s) -> f (b, s)
-          alpha r y = (beta r) =<< y
-          beta :: (s -> f (a, s)) -> (a -> b, s) -> f (b, s)
-          beta r' (f, s') = first f <$> (r' s')
-
-
+    where
+      alpha :: (s -> f (a, s)) -> f (a -> b, s) -> f (b, s)
+      alpha r y = (beta r) =<< y
+      beta :: (s -> f (a, s)) -> (a -> b, s) -> f (b, s)
+      beta r' (f, s') = first f <$> (r' s')
   -- (runf s) :: f (a -> b, s')
   -- (runx s') :: f (a, s'')
 
@@ -78,9 +77,11 @@ instance Monad f =>
 instance Monad f =>
          Monad (StateT s f) where
   (=<<) :: (a -> StateT s f b) -> StateT s f a -> StateT s f b
-  f =<< (StateT r) = StateT (\e -> join (carryApply <$> ((first (runStateT . f)) <$> (r e))))
-      where carryApply :: (a -> b, a) -> b
-            carryApply (f', x) = f' x
+  f =<< (StateT r) =
+    StateT (\e -> join (carryApply <$> ((first (runStateT . f)) <$> (r e))))
+    where
+      carryApply :: (a -> b, a) -> b
+      carryApply (f', x) = f' x
 
 -- | A `State'` is `StateT` specialised to the `Id` functor.
 type State' s a = StateT s Id a
@@ -103,21 +104,21 @@ runState' (StateT k) = runId . k
 execT
   :: Functor f
   => StateT s f a -> s -> f s
-execT r s = snd <$> (runStateT r) s
+execT r s = snd <$> runStateT r s
 
 -- | Run the `State` seeded with `s` and retrieve the resulting state.
 exec' :: State' s a -> s -> s
-exec' r s = snd $ (runState' r) s
+exec' r s = snd $ runState' r s
 
 -- | Run the `StateT` seeded with `s` and retrieve the resulting value.
 evalT
   :: Functor f
   => StateT s f a -> s -> f a
-evalT = error "todo: Course.StateT#evalT"
+evalT r s = fst <$> runStateT r s
 
 -- | Run the `State` seeded with `s` and retrieve the resulting value.
 eval' :: State' s a -> s -> a
-eval' = error "todo: Course.StateT#eval'"
+eval' r s = fst $ runState' r s
 
 -- | A `StateT` where the state also distributes into the produced value.
 --
@@ -126,7 +127,7 @@ eval' = error "todo: Course.StateT#eval'"
 getT
   :: Monad f
   => StateT s f s
-getT = error "todo: Course.StateT#getT"
+getT = StateT (\s -> pure (s, s))
 
 -- | A `StateT` where the resulting state is seeded with the given value.
 --
@@ -138,7 +139,7 @@ getT = error "todo: Course.StateT#getT"
 putT
   :: Monad f
   => s -> StateT s f ()
-putT = error "todo: Course.StateT#putT"
+putT s = StateT (\_ -> pure ((), s))
 
 -- | Remove all duplicate elements in a `List`.
 --
@@ -148,7 +149,7 @@ putT = error "todo: Course.StateT#putT"
 distinct'
   :: (Ord a, Num a)
   => List a -> List a
-distinct' = error "todo: Course.StateT#distinct'"
+distinct' xs =  fst $ (runState' (filtering (\x -> state' (\s -> (S.notMember x s, S.insert x s))) xs)) S.empty
 
 -- | Remove all duplicate elements in a `List`.
 -- However, if you see a value greater than `100` in the list,
