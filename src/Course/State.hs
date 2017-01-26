@@ -63,7 +63,7 @@ instance Applicative (State s) where
     State s (a -> b)
     -> State s a
     -> State s b 
-  (State runf) <*> (State runx) = State (\s -> 
+  (State runf) <*> (State runx) = State (\s ->
     let (f, s') = runf s
         (x, s'') = runx s'
         in (f x, s''))
@@ -189,4 +189,4 @@ distinct xs = fst $ (runState (filtering (\x -> State (\s -> (S.notMember x s, S
 isHappy ::
   Int
   -> Bool
-isHappy y = contains 1 . firstRepeat $ produce (\x -> sum $ map ((\x -> x * x) . digitToInt) (show' x)) y
+isHappy y = contains 1 . firstRepeat $ produce (\x -> sum $ map ((\z -> z * z) . digitToInt) (show' x)) y
