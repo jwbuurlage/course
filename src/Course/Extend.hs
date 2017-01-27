@@ -10,6 +10,8 @@ import Course.List
 import Course.Optional
 import Course.Functor
 
+-- Is this a comonad?
+--
 -- | All instances of the `Extend` type-class must satisfy one law. This law
 -- is not checked by the compiler. This law is given as:
 --
@@ -33,8 +35,7 @@ instance Extend Id where
     (Id a -> b)
     -> Id a
     -> Id b
-  (<<=) =
-    error "todo: Course.Extend (<<=)#instance Id"
+  f <<= x = Id (f x)
 
 -- | Implement the @Extend@ instance for @List@.
 --
@@ -51,8 +52,13 @@ instance Extend List where
     (List a -> b)
     -> List a
     -> List b
-  (<<=) =
-    error "todo: Course.Extend (<<=)#instance List"
+  _ <<= Nil = Nil
+  f <<= xs@(_ :. xs') = f xs :. (f <<= xs')
+-- note here that the simpler solution:
+--  f <<= xs = f(xs) :. Nil
+-- satisfies the law `∀f g. (f <<=) . (g <<=) ≅ (<<=) (f . (g <<=))`
+-- but not the tests. The reason is that this does not 'extend' into a
+-- proper comonad instance, but the information here is incomplete.
 
 -- | Implement the @Extend@ instance for @Optional@.
 --
@@ -66,8 +72,8 @@ instance Extend Optional where
     (Optional a -> b)
     -> Optional a
     -> Optional b
-  (<<=) =
-    error "todo: Course.Extend (<<=)#instance Optional"
+  _ <<= Empty = Empty
+  f <<= x = Full (f x)
 
 -- | Duplicate the functor using extension.
 --
@@ -83,8 +89,6 @@ instance Extend Optional where
 -- >>> cojoin Empty
 -- Empty
 cojoin ::
-  Extend f =>
-  f a
-  -> f (f a)
-cojoin =
-  error "todo: Course.Extend#cojoin"
+  Extend f => f a -> f (f a)
+cojoin x = id <<= x
+

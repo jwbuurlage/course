@@ -189,7 +189,7 @@ After this, the following progression of modules is recommended:
 - [x] `Course.FileIO`
 - [x] `Course.State`
 - [x] `Course.StateT`
-- [ ] `Course.Extend`
+- [x] `Course.Extend`
 - [ ] `Course.Comonad`
 - [ ] `Course.Compose`
 - [ ] `Course.Traversable`
